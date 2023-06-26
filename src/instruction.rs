@@ -32,8 +32,8 @@ impl Instruction {
 impl From<u8> for Opcode {
     fn from(v: u8) -> Self {
         match v {
-            0 => return Opcode::HLT,
-            1 => return Opcode::LOAD,
+            0 => return Opcode::LOAD,
+            1 => return Opcode::HLT,
             2 => return Opcode::ADD,
             3 => return Opcode::SUB,
             4 => return Opcode::MUL,

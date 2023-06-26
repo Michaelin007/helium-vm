@@ -2,11 +2,12 @@ use crate::instruction::Opcode;
 
 #[derive(Debug)]
 pub struct VM {
-    registers: [i32; 32],
+   pub registers: [i32; 32],
     pc: usize,
-    program: Vec<u8>,
+  pub  program: Vec<u8>,
     remainder: u32,
     equal_flag: bool,
+  
 }
 
 impl VM {
@@ -17,6 +18,7 @@ impl VM {
             program: vec![],
             remainder: 0,
             equal_flag: false,
+           
         }
     }
 
@@ -25,6 +27,10 @@ impl VM {
         self.pc += 1;
         return opcode;
     }
+    pub fn add_byte(&mut self, b: u8) {
+        self.program.push(b);
+    }
+
 
     fn next_8_bits(&mut self) -> u8 {
         let result = self.program[self.pc];
@@ -205,7 +211,7 @@ mod tests {
     #[test]
     fn test_load_opcode() {
         let mut test_vm = get_test_vm();
-        test_vm.program = vec![0, 0, 1, 244]; // representing 500 in little endian format
+        test_vm.program = vec![1, 0, 1, 244]; // representing 500 in little endian format
         test_vm.run();
 
         assert_eq!(test_vm.registers[0], 500);
@@ -260,7 +266,7 @@ mod tests {
     #[test]
     fn test_sub_opcode() {
         let mut test_vm = get_test_vm();
-        test_vm.program = vec![Opcode::SUB as u8, 1, 0, 2]; // assuming 1 and 0 are the indices of the registers to subtract, and 2 is the index of the register to store the result
+        test_vm.program = vec![3, 1, 0, 2]; // assuming 1 and 0 are the indices of the registers to subtract, and 2 is the index of the register to store the result
         test_vm.run();
 
         assert_eq!(test_vm.registers[2], 5); // assuming registers 1 and 0 were initialized with 10 and 5 respectively
@@ -269,7 +275,7 @@ mod tests {
     #[test]
     fn test_mul_opcode() {
         let mut test_vm = get_test_vm();
-        test_vm.program = vec![Opcode::MUL as u8, 0, 1, 2]; // assuming 0 and 1 are the indices of the registers to multiply, and 2 is the index of the register to store the result
+        test_vm.program = vec![4, 0, 1, 2]; // assuming 0 and 1 are the indices of the registers to multiply, and 2 is the index of the register to store the result
         test_vm.run();
 
         assert_eq!(test_vm.registers[2], 50); // assuming registers 0 and 1 were initialized with 5 and 10 respectively
