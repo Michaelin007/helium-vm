@@ -2,12 +2,11 @@ use crate::instruction::Opcode;
 
 #[derive(Debug)]
 pub struct VM {
-   pub registers: [i32; 32],
+    pub registers: [i32; 32],
     pc: usize,
-  pub  program: Vec<u8>,
+    pub program: Vec<u8>,
     remainder: u32,
     equal_flag: bool,
-  
 }
 
 impl VM {
@@ -18,7 +17,6 @@ impl VM {
             program: vec![],
             remainder: 0,
             equal_flag: false,
-           
         }
     }
 
@@ -31,12 +29,15 @@ impl VM {
         self.program.push(b);
     }
 
-
     fn next_8_bits(&mut self) -> u8 {
+        if self.pc >= self.program.len() {
+            panic!("Program counter has exceeded program length");
+        }
         let result = self.program[self.pc];
         self.pc += 1;
         return result;
     }
+    
 
     fn next_16_bits(&mut self) -> u16 {
         let result = ((self.program[self.pc] as u16) << 8) | self.program[self.pc + 1] as u16;
@@ -64,6 +65,11 @@ impl VM {
                 let number = self.next_16_bits() as u16;
                 self.registers[register] = number as i32;
             }
+            Opcode::ADD => {
+                let register1 = self.registers[self.next_8_bits() as usize];
+                let register2 = self.registers[self.next_8_bits() as usize];
+                self.registers[self.next_8_bits() as usize] = register1 + register2;
+            }
             Opcode::HLT => {
                 println!("HLT en countered");
                 return false;
@@ -72,11 +78,7 @@ impl VM {
                 println!("HLT en countered");
                 return false;
             }
-            Opcode::ADD => {
-                let register1 = self.registers[self.next_16_bits() as usize];
-                let register2 = self.registers[self.next_8_bits() as usize];
-                self.registers[self.next_8_bits() as usize] = register1 + register2;
-            }
+           
             Opcode::SUB => {
                 let register1 = self.registers[self.next_16_bits() as usize];
                 let register2 = self.registers[self.next_8_bits() as usize];
@@ -257,11 +259,7 @@ mod tests {
         assert_eq!(test_vm.pc, 7);
     }
 
-    #[test]
-    fn test_add_opcode() {
-       
-        
-    }
+ 
 
     #[test]
     fn test_sub_opcode() {

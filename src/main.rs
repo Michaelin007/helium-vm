@@ -1,8 +1,8 @@
-pub mod instruction;
-pub mod vm;
-pub mod repl;
 pub mod assembler;
-extern  crate nom;
+pub mod instruction;
+pub mod repl;
+pub mod vm;
+extern crate nom;
 
 #[macro_use]
 

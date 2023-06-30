@@ -1,4 +1,4 @@
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub enum Opcode {
     HLT,
     IGL,
@@ -25,7 +25,7 @@ pub struct Instruction {
 
 impl Instruction {
     pub fn new(opcode: Opcode) -> Instruction {
-        Instruction { opcode: opcode }
+        Instruction { opcode }
     }
 }
 
@@ -53,6 +53,32 @@ impl From<u8> for Opcode {
     }
 }
 
+impl <'a> From<&'a str> for Opcode {
+    fn from(value: &'a str) -> Self {
+        match value {
+            "load" => Opcode::LOAD,
+            "add" => Opcode::ADD,
+            "sub" => Opcode::SUB,
+            "mul" => Opcode::MUL,
+            "div" => Opcode::DIV,
+            "hlt" => Opcode::HLT,
+            "jmp" => Opcode::JMP,
+            "jmpf" => Opcode::JMPF,
+           
+            "eq" => Opcode::EQ,
+            "neq" => Opcode::NEQ,
+         
+            "gt" => Opcode::GT,
+          
+            "lt" => Opcode::LT,
+           
+            _ => Opcode::IGL,
+        }
+        
+    }
+    
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -67,5 +93,14 @@ mod tests {
     fn test_create_instruction() {
         let instruction = Instruction::new(Opcode::HLT);
         assert_eq!(instruction.opcode, Opcode::HLT);
+    }
+
+    #[test]
+    fn test_str_to_opcode() {
+        let opcode = Opcode::from("load");
+        assert_eq!(opcode, Opcode::LOAD);
+        let opcode = Opcode::from("illegal");
+        assert_eq!(opcode, Opcode::IGL
+        )
     }
 }
